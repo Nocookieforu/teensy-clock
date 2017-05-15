@@ -22,13 +22,8 @@ int     current_reads[CURRENT_NUM_READS] = {0};
 size_t  current_ind = 0;
 
 // LiquidCrystal Init for Adafruit character LCDs
-// RW = none
-// RS = 14
-// EN = 15
-// DB7 = 16
-// DB6 = 17
-// DB5 = 18
-// DB4 = 19
+// RW = not used, RS = 14, EN = 15
+// DB7 = 16, DB6 = 17, DB5 = 18, DB4 = 19
 LiquidCrystal lcd(14, 15, 19, 18, 17, 16);
 
 #define REDLITE   23
@@ -51,17 +46,9 @@ void setup() {
   Serial.begin(9600);
   
   // Turn on backlight
-  // Red
-  pinMode(21, OUTPUT);
-  //analogWrite(21, 1);
-  //digitalWrite(21, LOW);
-  // Green
-  pinMode(22, OUTPUT);
-  //analogWrite(22, 100);
-  // Blue
-  pinMode(23, OUTPUT);
-  //analogWrite(23, 1);
-  //digitalWrite(23, LOW);
+  pinMode(REDLITE,   OUTPUT);
+  pinMode(GREENLITE, OUTPUT);
+  pinMode(BLUELITE,  OUTPUT);
   setBacklight(0, 100, 0, 100);
     
   // Set up LCD
@@ -82,29 +69,11 @@ void loop() {
   }
   in_avg = in_avg / 16;
   
-  // Translate to lumens
-  //analogWrite(22, in_avg/4);
+  // TODO: Translate to lumens
   setBacklight(0, (in_avg/4) & 0xFF, 0, 100);
   
   // Display on LCD
   lcd_write_voltage(in_avg);
- 
-  /*
-  Serial.print(value, HEX);
-  Serial.print("\t");
-  Serial.print(value_str);
-  Serial.print("\t");
-  Serial.print(value & 0x0F);
-  Serial.println();
-  */
-  
-  /*
-  current_ind++;
-  if (current_ind >= CURRENT_NUM_READS)
-  {
-    current_ind = 0;
-  }
-  */
   
   delay(200);
 }
@@ -158,9 +127,9 @@ void setBacklight(uint8_t r, uint8_t g, uint8_t b, uint8_t brightness)
   r = map(r, 0, 255, 255, 0);
   g = map(g, 0, 255, 255, 0);
   b = map(b, 0, 255, 255, 0);
-  Serial.print("R = "); Serial.print(r, DEC);
-  Serial.print(" G = "); Serial.print(g, DEC);
-  Serial.print(" B = "); Serial.println(b, DEC);
+  //Serial.print("R = "); Serial.print(r, DEC);
+  //Serial.print(" G = "); Serial.print(g, DEC);
+  //Serial.print(" B = "); Serial.println(b, DEC);
   analogWrite(REDLITE, r);
   analogWrite(GREENLITE, g);
   analogWrite(BLUELITE, b);
